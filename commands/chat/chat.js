@@ -94,8 +94,8 @@ async function handleButtonInteraction(buttonInteraction, userId, chat) {
 			await modalSubmitInteraction.deferReply()
 
             const newPrompt = modalSubmitInteraction.fields.getTextInputValue('newReplyInput');
-            const result = await chat.sendMessage(newPrompt);
-            const response = result.response.text();
+            const result = await chat.sendMessage({ message: newPrompt });
+            const response = result.text;
 
             const finalResponse = response.length > MAX_DISCORD_LENGTH
                 ? response.substring(0, MAX_DISCORD_LENGTH - 3) + '...'
