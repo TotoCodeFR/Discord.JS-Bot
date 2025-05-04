@@ -3,123 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel d'ATR Bot</title>
-    <style>
-        @font-face {
-            font-family: 'Inter';
-            src: url("/fonts/Inter.ttf") format("truetype"),
-        }
-        
-        @font-face {
-            font-family: 'Inter-Italic';
-            src: url("/fonts/Inter-Italic.ttf") format("truetype"),
-        }
-        
-        html {
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #303030;
-            color: #fff;
-        }
-
-        .open-apps {
-            text-decoration: none;
-            color: #fff;
-            padding: 20px 30px;
-            border-radius: 50px;
-            font-size: 1em;
-            font-weight: 700;
-            font-family: 'Inter';
-            margin: 0 10px;
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
-            outline: none;
-            border: none;
-            position: relative;
-        }
-
-        .open-apps::after {
-            content: '↻';
-            position: absolute;
-            right: 20px;
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: all 0.2s ease-in-out;
-        }
-
-        .open-apps:hover {
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
-            padding-right: 50px;
-        }
-
-        .open-apps:hover::after {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* Adding style for the console output */
-        #console {
-            width: 100%;
-            height: 400px;
-            background-color: #222;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            font-family: monospace;
-            overflow-y: scroll;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-    </style>
+    <title>Panel</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button class="open-apps" style="background-color: #ffce46;">Redémarrer</button>
-
-    <h1>Console</h1>
-    <p>Ce qu'il se passe sur le bot</p>
-    <div id="console"></div>
-
+    <div id="root">
+        
+    </div>
+    
+    <script src="script.js"></script>
     <script>
-        // Handling the restart button click
-        document.querySelector('.open-apps').addEventListener('click', function() {
-            const res = fetch('/api/restart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            
-            res.then(response => {
-                if (response.ok) {
-                    alert('Bot en redémarrage...');
-                } else {
-                    alert('Erreur lors du redémarrage du bot.');
-                }
-            })
-        });
-
-        // Function to fetch the logs every 10 seconds
-        function fetchLogs() {
-            fetch('/api/console')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('console').innerHTML = ''; // Clear the console before appending new logs
-                    document.getElementById('console').innerHTML = document.getElementById('console').innerHTML + data;
-                })
-                .catch(err => console.error('Error fetching logs:', err));
-        }
-
-        // Fetch logs every 10 seconds
-        setInterval(fetchLogs, 10000);
-
-        // Initial fetch
-        fetchLogs();
+        const ws = new WebSocket('ws://localhost:8080');
+        
+        ws.onmessage = function(event) {
+            if (event.data === 'refresh') {
+                location.reload();
+            }
+        };
     </script>
 </body>
 </html>
