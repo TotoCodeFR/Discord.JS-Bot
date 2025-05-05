@@ -20,4 +20,3 @@ if [ $? -eq 0 ]; then
 else
     echo "❌ Error: Failed to push to GitHub"
     exit 1
-fi
